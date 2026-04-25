@@ -16,7 +16,6 @@ padding:20px;
 border-radius:10px;
 }
 
-.center {text-align:center;}
 .hidden {display:none;}
 
 button {
@@ -28,48 +27,29 @@ cursor:pointer;
 input, select {
 width:100%;
 padding:10px;
-margin-top:5px; /* MAYDON VA LABEL YAQIN */
+margin-top:6px;
 }
 
-/* 🔥 ORALIQNI KATTA QILISH */
-.form-group {
-margin-bottom:22px;
-}
+.form-group {margin-bottom:22px;}
 
 label {
 display:block;
 font-weight:bold;
 margin-bottom:6px;
 }
+
 small {color:gray;}
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-<div id="splash" class="container center">
-  <h2>LOGO</h2>
-  <p>Qanlıkól rayonı ádillik bolimi bas máslahatshisi<br>
-  Yusupov Ernazar tárepinen islep shıǵıldı</p>
-</div>
+<div id="main" class="container">
 
-<!-- LANGUAGE -->
-<div id="language" class="container center hidden">
-  <h3>Tilni tanlang</h3>
-  <button onclick="startUz()">Oʻzbek tili</button>
-  <button>Qaraqalpaq tili</button>
-</div>
-
-<!-- MAIN -->
-<div id="main" class="container hidden">
-
-<p><b>Bu sayt mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash uchun.</b></p>
-
-<!-- ORGANIZATION -->
+<!-- TASHKILOT -->
 <div class="form-group">
 <label>Tashkilotni tanlang 👇</label>
-<input list="orgs" placeholder="-- Tanlang --">
+<input list="orgs" id="orgInput" placeholder="-- Tanlang --">
 
 <datalist id="orgs">
 <option value="Davlat umumiy oʻrta taʼlim maktablari">
@@ -100,7 +80,9 @@ small {color:gray;}
 <!-- DISTRICT -->
 <div class="form-group">
 <label>Shahar(tuman)ni tanlang 👇</label>
-<select id="district"></select>
+<select id="district">
+<option value="">-- Tanlang --</option>
+</select>
 <small id="hint"></small>
 </div>
 
@@ -119,24 +101,11 @@ small {color:gray;}
 <button onclick="calc()">Hisoblash</button>
 
 <h3 id="res"></h3>
-<p id="txt"></p>
 
 </div>
 
 <script>
 
-// splash
-setTimeout(()=>{
-document.getElementById('splash').classList.add('hidden');
-document.getElementById('language').classList.remove('hidden');
-},2000);
-
-function startUz(){
-document.getElementById('language').classList.add('hidden');
-document.getElementById('main').classList.remove('hidden');
-}
-
-// DATA
 const districts = {
 qq: [
 "Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
@@ -160,11 +129,15 @@ qashqa: [
 };
 
 function loadDistricts(){
+
 let region = document.getElementById("region").value;
 let district = document.getElementById("district");
 let hint = document.getElementById("hint");
 
-district.innerHTML = "";
+// reset
+district.innerHTML = <option value="">-- Tanlang --</option>;
+district.disabled = false;
+hint.innerText = "";
 
 // BOSHQA
 if(region === "boshqa"){
@@ -173,11 +146,8 @@ hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting
 return;
 }
 
-district.disabled = false;
-hint.innerText = "";
-  // fill
+// fill
 if(districts[region]){
-district.innerHTML = <option value="">-- Tanlang --</option>;
 districts[region].forEach(d=>{
 let opt = document.createElement("option");
 opt.value = d;
@@ -188,19 +158,24 @@ district.appendChild(opt);
 }
 
 function calc(){
+
 let d = document.getElementById('date').value;
 let days = parseInt(document.getElementById('days').value);
 
-if(!d){alert("Sanani tanlang");return;}
+if(!d){
+alert("Sanani tanlang");
+return;
+}
+
+if(!days){
+days = 0;
+}
 
 let dt = new Date(d);
 dt.setDate(dt.getDate() + days);
 
 document.getElementById('res').innerText =
 "Ishga chiqish sanasi: " + dt.toLocaleDateString('uz-UZ');
-
-document.getElementById('txt').innerText =
-"Shu sanada ishga chiqishingiz kerak";
 }
 
 </script>
