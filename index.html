@@ -6,100 +6,70 @@
 <title>Mehnat Ta'tili Hisoblash</title>
 
 <style>
-body {
-font-family: Arial;
-background:#f5f7fa;
-margin:0;
-}
-
-.container {
-max-width:600px;
-margin:40px auto;
-background:#fff;
-padding:20px;
-border-radius:10px;
-}
-
-.form-group {
-margin-bottom:20px;
-}
-
-label {
-display:block;
-font-weight:bold;
-margin-bottom:6px;
-}
-
-input, select {
-width:100%;
-padding:10px;
-margin-top:6px;
-box-sizing:border-box;
-}
-
-button {
-padding:10px 20px;
-margin-top:10px;
-cursor:pointer;
-}
-
-small {color:gray;}
+body {font-family: Arial; background:#f5f7fa; margin:0;}
+.container {max-width:600px; margin:40px auto; background:#fff; padding:20px; border-radius:10px;}
+.form-group {margin-bottom:20px;}
+label {font-weight:bold;}
+input, select {width:100%; padding:10px; margin-top:5px;}
+button {padding:10px; margin-top:10px; width:100%;}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-<p><b>Mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash tizimi</b></p>
+<p><b>Mehnat ta’tili hisoblash tizimi</b></p>
 
-<!-- TASHKILOT -->
 <div class="form-group">
 <label>Tashkilotni tanlang 👇</label>
-<input list="orgs" placeholder="Tanlang">
-
-<datalist id="orgs">
-<option value="Davlat umumiy oʻrta taʼlim maktablari">
-<option value="Davlat maktabgacha taʼlim tashkilotlari">
-<option value="Maktabgacha va maktab ta’lim bo‘limi">
-<option value="Madaniyat bo‘limi">
-<option value="Tibbiyot birlashmasi">
-<option value="Soliq inspeksiyasi">
-<option value="Yoshlar ishlari agentligi bo‘limi">
-<option value="Boshqa">
-</datalist>
+<select id="org">
+<option value="">Tanlang</option>
+<option value="6">Davlat umumiy oʻrta taʼlim maktablari</option>
+<option value="5">Davlat maktabgacha taʼlim tashkilotlari</option>
+<option value="5">Maktabgacha va maktab ta’lim bo‘limi</option>
+<option value="5">Madaniyat bo‘limi</option>
+<option value="5">Tibbiyot birlashmasi</option>
+<option value="5">Sanitariya-epidemiologik bo‘lim</option>
+<option value="6">Davlat o‘rmon xo‘jaligi</option>
+<option value="5">Pensiya jamg‘armasi</option>
+<option value="6">Obodonlashtirish boshqarmasi</option>
+<option value="5">Suv yetkazib berish</option>
+<option value="5">Veterinariya</option>
+<option value="5">Oila va xotin-qizlar</option>
+<option value="5">Bandlik markazi</option>
+<option value="5">Soliq inspeksiyasi</option>
+<option value="5">Qishloq xo‘jaligi</option>
+<option value="5">Turizm</option>
+<option value="5">Yoshlar agentligi</option>
+<option value="5">Poliklinikalar</option>
+</select>
 </div>
 
-<!-- HUDUD -->
 <div class="form-group">
 <label>Hududni tanlang 👇</label>
 <select id="region" onchange="loadDistricts()">
 <option value="">Tanlang</option>
-<option value="qq">Qoraqalpogʻiston Respublikasi</option>
-<option value="navoiy">Navoiy viloyati</option>
-<option value="buxoro">Buxoro viloyati</option>
-<option value="namangan">Namangan viloyati</option>
-<option value="qashqa">Qashqadaryo viloyati</option>
+<option value="qq">Qoraqalpogʻiston</option>
+<option value="navoiy">Navoiy</option>
+<option value="buxoro">Buxoro</option>
+<option value="namangan">Namangan</option>
+<option value="qashqa">Qashqadaryo</option>
 <option value="boshqa">Boshqa</option>
 </select>
 </div>
 
-<!-- TUMAN -->
 <div class="form-group">
-<label>Shahar (tuman)ni tanlang 👇</label>
+<label>Tuman(shahar)ni tanlang 👇</label>
 <select id="district"></select>
-<small id="hint"></small>
 </div>
 
-<!-- KUN -->
 <div class="form-group">
 <label>Ta’til miqdorini kiriting</label>
 <input type="number" id="days">
 </div>
 
-<!-- SANA -->
 <div class="form-group">
-<label>Ta’til boshlanish sanasi</label>
+<label>Boshlanish sanasi</label>
 <input type="date" id="date">
 </div>
 
@@ -111,89 +81,94 @@ small {color:gray;}
 
 <script>
 
+// BONUS KUNLAR
+const bonus = {
+"Moʻynoq tumani":3,"Moʻynoq shahri":3,"Qoʻngʻirot tumani":3,"Boʻzatov tumani":3,
+"Qoraoʻzak tumani":2,"Kegeyli tumani":2,"Qonlikoʻl tumani":2,"Nukus tumani":2,
+"Taxtakoʻpir tumani":2,"Chimboy tumani":2,"Shumanoy tumani":2,"Qoʻngʻirot shahri":2,
+"Taxiatosh tumani":1,"Xoʻjayli tumani":1,"Amudaryo tumani":1,"Beruniy tumani":1,
+"Toʻrtkoʻl tumani":1,"Ellikqal’a tumani":1,"Nukus shahri":1,
+"Uchquduk shahri":6,"Zarafshon shahri":6,"Tomdi tumani":5,"Uchquduq tumani":5,
+"Konimex tumani":3,"Qiziltepa tumani":3,"Navbahor tumani":3,"Nurota tumani":3,
+"Xatirchi tumani":3,"Karmana tumani":2,"Navoiy shahri":2,
+"Qorovulbozor tumani":5,"Gazli shahri":2,"Olot tumani":2,"Qorakoʻl tumani":2,
+"Pop tumani":2,"Muborak tumani":2
+};
+
+// TUMANLAR
 const districts = {
-qq: [
-"Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
-"Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani",
-"Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri"
-],
-navoiy: [
-"Uchquduq shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani",
-"Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani",
-"Xatirchi tumani","Karmana tumani","Navoiy shahri"
-],
-buxoro: [
-"Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani"
-],
-namangan: [
-"Pop tumani","Chorkesar shaharchasi"
-],
-qashqa: [
-"Muborak tumani"
-]
+qq:["Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani","Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri","Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani","Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"],
+navoiy:["Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani","Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani","Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"],
+buxoro:["Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"],
+namangan:["Pop tumani","Boshqa"],
+qashqa:["Muborak tumani","Boshqa"]
 };
 
 function loadDistricts(){
-
-let region = document.getElementById("region").value;
-let district = document.getElementById("district");
-let hint = document.getElementById("hint");
-
-// reset TO‘G‘RI
-district.innerHTML = "";
-hint.innerText = "";
-
-// BOSHQA
-if(region === "boshqa"){
-district.disabled = true;
-hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting.";
+let region=document.getElementById("region").value;
+let d=document.getElementById("district");
+d.innerHTML="";
+  if(region==="boshqa"){
+d.disabled=true;
 return;
 }
 
-district.disabled = false;
+d.disabled=false;
 
-// default option
-let defaultOpt = document.createElement("option");
-defaultOpt.value = "";
-defaultOpt.textContent = "Tanlang";
-defaultOpt.selected = true;
-defaultOpt.disabled = true;
-district.appendChild(defaultOpt);
-
-// fill
-if(districts[region]){
-districts[region].forEach(d=>{
-let opt = document.createElement("option");
-opt.value = d;
-opt.textContent = d;
-district.appendChild(opt);
+districts[region].forEach(x=>{
+let o=document.createElement("option");
+o.text=x;
+d.add(o);
 });
+}
+
+// ISH KUNI CHECK
+function isWorkDay(date,workType){
+let day=date.getDay();
+if(workType==6){
+return day!==0;
+}else{
+return day!==0 && day!==6;
 }
 }
 
 function calc(){
 
-let d = document.getElementById('date').value;
-let days = parseInt(document.getElementById('days').value);
+let days=parseInt(document.getElementById("days").value);
+let date=new Date(document.getElementById("date").value);
+let workType=parseInt(document.getElementById("org").value);
+let district=document.getElementById("district").value;
 
-if(!d){
-alert("Sanani tanlang");
-return;
+// BONUS
+let b=bonus[district]||0;
+
+// 1. oddiy
+let normal=days-b;
+
+let dt=new Date(date);
+
+// oddiy kunlar
+dt.setDate(dt.getDate()+normal);
+
+// 2. imtiyozli
+let count=0;
+while(count<b){
+dt.setDate(dt.getDate()+1);
+if(isWorkDay(dt,workType)){
+count++;
+}
 }
 
-if(isNaN(days)){
-alert("Ta’til miqdorini kiriting");
-return;
+// 3. ishga chiqish sanasi correction
+while(!isWorkDay(dt,workType)){
+dt.setDate(dt.getDate()+1);
 }
 
-let dt = new Date(d);
-dt.setDate(dt.getDate() + days);
+document.getElementById("res").innerText=
+"Ishga chiqish sanasi: "+dt.toLocaleDateString("uz-UZ");
 
-document.getElementById('res').innerText =
-"Ishga chiqish sanasi: " + dt.toLocaleDateString('uz-UZ');
 }
 
 </script>
-
 </body>
 </html>
