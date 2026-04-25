@@ -16,6 +16,7 @@ padding:20px;
 border-radius:10px;
 }
 
+.center {text-align:center;}
 .hidden {display:none;}
 
 button {
@@ -30,7 +31,9 @@ padding:10px;
 margin-top:6px;
 }
 
-.form-group {margin-bottom:22px;}
+.form-group {
+margin-bottom:20px;
+}
 
 label {
 display:block;
@@ -44,12 +47,29 @@ small {color:gray;}
 
 <body>
 
-<div id="main" class="container">
+<!-- SPLASH -->
+<div id="splash" class="container center">
+  <h2>LOGO</h2>
+  <p>Qanlıkól rayonı ádillik bolimi bas máslahatshisi<br>
+  Yusupov Ernazar tárepinen islep shıǵıldı</p>
+</div>
 
-<!-- TASHKILOT -->
+<!-- LANGUAGE -->
+<div id="language" class="container center hidden">
+  <h3>Tilni tanlang</h3>
+  <button onclick="startUz()">Oʻzbek tili</button>
+  <button>Qaraqalpaq tili</button>
+</div>
+
+<!-- MAIN -->
+<div id="main" class="container hidden">
+
+<p><b>Bu sayt mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash uchun.</b></p>
+
+<!-- ORGANIZATION -->
 <div class="form-group">
 <label>Tashkilotni tanlang 👇</label>
-<input list="orgs" id="orgInput" placeholder="-- Tanlang --">
+<input list="orgs" placeholder="-- Tanlang --">
 
 <datalist id="orgs">
 <option value="Davlat umumiy oʻrta taʼlim maktablari">
@@ -63,7 +83,7 @@ small {color:gray;}
 </datalist>
 </div>
 
-<!-- REGION -->
+<!-- HUDUD -->
 <div class="form-group">
 <label>Hududni tanlang 👇</label>
 <select id="region" onchange="loadDistricts()">
@@ -101,11 +121,24 @@ small {color:gray;}
 <button onclick="calc()">Hisoblash</button>
 
 <h3 id="res"></h3>
+<p id="txt"></p>
 
 </div>
 
 <script>
 
+// SPLASH
+setTimeout(()=>{
+document.getElementById('splash').classList.add('hidden');
+document.getElementById('language').classList.remove('hidden');
+},2000);
+
+function startUz(){
+document.getElementById('language').classList.add('hidden');
+document.getElementById('main').classList.remove('hidden');
+}
+
+// DATA
 const districts = {
 qq: [
 "Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
@@ -138,8 +171,7 @@ let hint = document.getElementById("hint");
 district.innerHTML = <option value="">-- Tanlang --</option>;
 district.disabled = false;
 hint.innerText = "";
-
-// BOSHQA
+  // BOSHQA
 if(region === "boshqa"){
 district.disabled = true;
 hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting.";
