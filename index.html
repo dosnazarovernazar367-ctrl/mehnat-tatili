@@ -4,62 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mehnat Ta'tili Hisoblash</title>
+
 <style>
 body {font-family: Arial; background:#f5f7fa; margin:0;}
-.container {max-width:600px; margin:50px auto; background:#fff; padding:20px; border-radius:10px;}
+.container {max-width:600px; margin:40px auto; background:#fff; padding:20px; border-radius:10px;}
 .center {text-align:center;}
 .hidden {display:none;}
-button {padding:10px 20px; margin:10px;}
+button {padding:10px 20px; margin:10px; cursor:pointer;}
 input, select {width:100%; padding:10px; margin-top:10px;}
+small {color:gray;}
 </style>
 </head>
+
 <body>
 
+<!-- SPLASH -->
 <div id="splash" class="container center">
-<h2>LOGO</h2>
-<p>Qanlıkól rayonı ádillik bolimi bas máslahatshisi<br>Yusupov Ernazar tárepinen islep shıǵıldı</p>
+  <h2>LOGO</h2>
+  <p>Qanlıkól rayonı ádillik bolimi bas máslahatshisi<br>
+  Yusupov Ernazar tárepinen islep shıǵıldı</p>
 </div>
 
+<!-- LANGUAGE -->
 <div id="language" class="container center hidden">
-<h3>Tilni tanlang</h3>
-<button onclick="startUz()">Oʻzbek tili</button>
-<button>Qaraqalpaq tili</button>
+  <h3>Tilni tanlang</h3>
+  <button onclick="startUz()">Oʻzbek tili</button>
+  <button>Qaraqalpaq tili</button>
 </div>
 
+<!-- MAIN -->
 <div id="main" class="container hidden">
-<p><b>Maskur sayt davlat tashkilotlari xodimlaring mehnat ta’tilidan qachon ishga chiqishini aniqlash uchun ishlab chiqilgan</b></p>
 
+<p><b>Bu sayt mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash uchun.</b></p>
+
+<!-- ORGANIZATION -->
 <label>Tashkilotni tanlang</label>
 <input list="orgs">
 <datalist id="orgs">
-<option value="1">
-<option value="2">
-<option value="3">
-<option value="4">
-<option value="5">
+<option value="Davlat umumiy oʻrta taʼlim maktablari">
+<option value="Davlat maktabgacha taʼlim tashkilotlari">
+<option value="Maktabgacha va maktab ta’lim bo‘limi">
+<option value="Madaniyat bo‘limi">
+<option value="Tibbiyot birlashmasi">
+<option value="Soliq inspeksiyasi">
+<option value="Yoshlar ishlari agentligi bo‘limi">
+<option value="Boshqa">
 </datalist>
 
-<label>Shahar(tuman)ni tanglang</label>
-<select>
-<option>a</option>
-<option>b</option>
-<option>g</option>
-<option>d</option>
+<!-- HUDUD -->
+<label>Hududni tanlang</label>
+<select id="region" onchange="loadDistricts()">
+<option value="">-- Tanlang --</option>
+<option value="qq">Qoraqalpogʻiston Respublikasi</option>
+<option value="navoiy">Navoiy viloyati</option>
+<option value="buxoro">Buxoro viloyati</option>
+<option value="namangan">Namangan viloyati</option>
+<option value="qashqa">Qashqadaryo viloyati</option>
+<option value="boshqa">Boshqa</option>
 </select>
 
-<label>Bu yerga mehnat ta’tilingiz nechta kundan iboratligini yozing</label>
-<input type="number" value="30">
+<!-- DISTRICT -->
+<label>Shahar(tuman)ni tanlang</label>
+<select id="district"></select>
+<small id="hint"></small>
 
+<!-- DAYS -->
+<label>Ta’til kunlari</label>
+<input type="number" id="days" value="30">
+
+<!-- DATE -->
 <label>Ta’til boshlanish sanasi</label>
-<input type="date" id="date" min="2026-01-01" max="2027-12-31">
+<input type="date" id="date">
 
 <button onclick="calc()">Hisoblash</button>
 
 <h3 id="res"></h3>
 <p id="txt"></p>
+
 </div>
 
 <script>
+
+// splash
 setTimeout(()=>{
 document.getElementById('splash').classList.add('hidden');
 document.getElementById('language').classList.remove('hidden');
@@ -70,14 +96,70 @@ document.getElementById('language').classList.add('hidden');
 document.getElementById('main').classList.remove('hidden');
 }
 
-function calc(){
-let d=document.getElementById('date').value;
-if(!d){alert('Sanani tanlang');return;}
-let dt=new Date(d);
-dt.setDate(dt.getDate()+30);
-document.getElementById('res').innerText=dt.toISOString().split('T')[0];
-document.getElementById('txt').innerText="Shu sanada ishga chiqishingiz kerak";
+// DATA
+const districts = {
+qq: [
+"Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
+"Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani",
+"Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri"
+],
+navoiy: [
+"Uchquduq shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani",
+"Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani",
+"Xatirchi tumani","Karmana tumani","Navoiy shahri"
+],
+buxoro: [
+"Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani"
+],
+namangan: [
+"Pop tumani","Chorkesar shaharchasi"
+],
+qashqa: [
+"Muborak tumani"
+]
+};
+
+function loadDistricts(){
+let region = document.getElementById("region").value;
+let district = document.getElementById("district");
+let hint = document.getElementById("hint");
+
+district.innerHTML = "";
+
+if(region === "boshqa"){
+district.disabled = true;
+hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting.";
+return;
 }
+
+district.disabled = false;
+hint.innerText = "";
+
+if(districts[region]){
+districts[region].forEach(d=>{
+let opt = document.createElement("option");
+opt.value = d;
+opt.textContent = d;
+district.appendChild(opt);
+});
+}
+}
+
+function calc(){
+let d = document.getElementById('date').value;
+let days = parseInt(document.getElementById('days').value);
+
+if(!d){alert("Sanani tanlang");return;}
+
+let dt = new Date(d);
+dt.setDate(dt.getDate() + days);
+  document.getElementById('res').innerText =
+"Ishga chiqish sanasi: " + dt.toLocaleDateString('uz-UZ');
+
+document.getElementById('txt').innerText =
+"Shu sanada ishga chiqishingiz kerak";
+}
+
 </script>
 
 </body>
