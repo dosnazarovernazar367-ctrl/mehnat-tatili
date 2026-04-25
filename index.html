@@ -190,8 +190,18 @@ if(workType == 5 && day !== 0 && day !== 6) break;
 dt.setDate(dt.getDate() + 1);
 }
 
+let months = [
+"yanvar","fevral","mart","aprel","may","iyun",
+"iyul","avgust","sentabr","oktabr","noyabr","dekabr"
+];
+
+let result =
+dt.getFullYear() + "-yil " +
+dt.getDate() + "-" +
+months[dt.getMonth()];
+
 document.getElementById("res").innerText =
-"Ishga chiqish sanasi: " + dt.toLocaleDateString("uz-UZ");
+"Ishga chiqish sanasi: " + result;
 
 }
 
