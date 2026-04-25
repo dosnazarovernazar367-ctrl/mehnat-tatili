@@ -43,11 +43,7 @@ margin-top:10px;
 cursor:pointer;
 }
 
-small {
-display:block;
-margin-top:5px;
-color:gray;
-}
+small {color:gray;}
 </style>
 </head>
 
@@ -97,9 +93,8 @@ color:gray;
 
 <!-- KUN -->
 <div class="form-group">
-<label>Ta’til kunlari (12 - 56)</label>
-<input type="number" id="days" placeholder="12 - 56 oralig‘ida kiriting">
-<small id="dayHint">12dan yuqori va 56gacha sonni tanlash mumkin</small>
+<label>Ta’til miqdorini kiriting</label>
+<input type="number" id="days">
 </div>
 
 <!-- SANA -->
@@ -144,7 +139,7 @@ let region = document.getElementById("region").value;
 let district = document.getElementById("district");
 let hint = document.getElementById("hint");
 
-// reset
+// reset TO‘G‘RI
 district.innerHTML = "";
 hint.innerText = "";
 
@@ -158,12 +153,12 @@ return;
 district.disabled = false;
 
 // default option
-let opt0 = document.createElement("option");
-opt0.value = "";
-opt0.textContent = "Tanlang";
-opt0.selected = true;
-opt0.disabled = true;
-district.appendChild(opt0);
+let defaultOpt = document.createElement("option");
+defaultOpt.value = "";
+defaultOpt.textContent = "Tanlang";
+defaultOpt.selected = true;
+defaultOpt.disabled = true;
+district.appendChild(defaultOpt);
 
 // fill
 if(districts[region]){
@@ -180,27 +175,17 @@ function calc(){
 
 let d = document.getElementById('date').value;
 let days = parseInt(document.getElementById('days').value);
-let hint = document.getElementById('dayHint');
 
 if(!d){
 alert("Sanani tanlang");
 return;
 }
 
-// VALIDATION
-if(isNaN(days)  days < 12  days > 56){
-  hint.innerText = "❌ Xato: 12dan yuqori va 56gacha sonni tanlash mumkin";
-hint.style.color = "red";
-
-document.getElementById('res').innerText = "";
+if(isNaN(days)){
+alert("Ta’til miqdorini kiriting");
 return;
 }
 
-// reset hint
-hint.innerText = "12dan yuqori va 56gacha sonni tanlash mumkin";
-hint.style.color = "gray";
-
-// calculate
 let dt = new Date(d);
 dt.setDate(dt.getDate() + days);
 
