@@ -7,11 +7,40 @@
 
 <style>
 body {font-family: Arial; background:#f5f7fa; margin:0;}
-.container {max-width:600px; margin:40px auto; background:#fff; padding:20px; border-radius:10px;}
+
+.container {
+max-width:600px;
+margin:40px auto;
+background:#fff;
+padding:20px;
+border-radius:10px;
+}
+
 .center {text-align:center;}
 .hidden {display:none;}
-button {padding:10px 20px; margin:10px; cursor:pointer;}
-input, select {width:100%; padding:10px; margin-top:10px;}
+
+button {
+padding:10px 20px;
+margin:10px;
+cursor:pointer;
+}
+
+input, select {
+width:100%;
+padding:10px;
+margin-top:5px; /* MAYDON VA LABEL YAQIN */
+}
+
+/* 🔥 ORALIQNI KATTA QILISH */
+.form-group {
+margin-bottom:22px;
+}
+
+label {
+display:block;
+font-weight:bold;
+margin-bottom:6px;
+}
 small {color:gray;}
 </style>
 </head>
@@ -38,8 +67,10 @@ small {color:gray;}
 <p><b>Bu sayt mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash uchun.</b></p>
 
 <!-- ORGANIZATION -->
-<label>Tashkilotni tanlang</label>
-<input list="orgs">
+<div class="form-group">
+<label>Tashkilotni tanlang 👇</label>
+<input list="orgs" placeholder="-- Tanlang --">
+
 <datalist id="orgs">
 <option value="Davlat umumiy oʻrta taʼlim maktablari">
 <option value="Davlat maktabgacha taʼlim tashkilotlari">
@@ -50,9 +81,11 @@ small {color:gray;}
 <option value="Yoshlar ishlari agentligi bo‘limi">
 <option value="Boshqa">
 </datalist>
+</div>
 
-<!-- HUDUD -->
-<label>Hududni tanlang</label>
+<!-- REGION -->
+<div class="form-group">
+<label>Hududni tanlang 👇</label>
 <select id="region" onchange="loadDistricts()">
 <option value="">-- Tanlang --</option>
 <option value="qq">Qoraqalpogʻiston Respublikasi</option>
@@ -62,19 +95,26 @@ small {color:gray;}
 <option value="qashqa">Qashqadaryo viloyati</option>
 <option value="boshqa">Boshqa</option>
 </select>
+</div>
 
 <!-- DISTRICT -->
-<label>Shahar(tuman)ni tanlang</label>
+<div class="form-group">
+<label>Shahar(tuman)ni tanlang 👇</label>
 <select id="district"></select>
 <small id="hint"></small>
+</div>
 
 <!-- DAYS -->
+<div class="form-group">
 <label>Ta’til kunlari</label>
 <input type="number" id="days" value="30">
+</div>
 
 <!-- DATE -->
+<div class="form-group">
 <label>Ta’til boshlanish sanasi</label>
 <input type="date" id="date">
+</div>
 
 <button onclick="calc()">Hisoblash</button>
 
@@ -126,6 +166,7 @@ let hint = document.getElementById("hint");
 
 district.innerHTML = "";
 
+// BOSHQA
 if(region === "boshqa"){
 district.disabled = true;
 hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting.";
@@ -134,8 +175,9 @@ return;
 
 district.disabled = false;
 hint.innerText = "";
-
+  // fill
 if(districts[region]){
+district.innerHTML = <option value="">-- Tanlang --</option>;
 districts[region].forEach(d=>{
 let opt = document.createElement("option");
 opt.value = d;
@@ -153,7 +195,8 @@ if(!d){alert("Sanani tanlang");return;}
 
 let dt = new Date(d);
 dt.setDate(dt.getDate() + days);
-  document.getElementById('res').innerText =
+
+document.getElementById('res').innerText =
 "Ishga chiqish sanasi: " + dt.toLocaleDateString('uz-UZ');
 
 document.getElementById('txt').innerText =
