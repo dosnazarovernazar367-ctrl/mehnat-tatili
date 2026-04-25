@@ -139,18 +139,20 @@ let start = new Date(document.getElementById("date").value);
 let workType = parseInt(document.getElementById("org").value);
 let district = document.getElementById("district").value;
 
-// bonus
+// bonus kun
 let b = bonus[district] || 0;
 
-// oddiy kunlar
+// oddiy kun
 let normal = days - b;
 
 let dt = new Date(start);
 
-// 1️⃣ oddiy kunlar (kalendar)
-dt.setDate(dt.getDate() + normal);
+// ✅ 1. oddiy kunlar (kalendar)
+for(let i=0; i<normal; i++){
+dt.setDate(dt.getDate() + 1);
+}
 
-// 2️⃣ imtiyozli kunlar (TO‘G‘RI LOGIKA)
+// ✅ 2. imtiyozli kunlar (TO‘G‘RI)
 let added = 0;
 
 while(added < b){
@@ -159,7 +161,7 @@ dt.setDate(dt.getDate() + 1);
 
 let day = dt.getDay();
 
-// 6 kunlik → faqat yakshanba skip
+// 6 kunlik → yakshanba skip
 if(workType == 6){
 if(day !== 0){
 added++;
@@ -175,7 +177,7 @@ added++;
 
 }
 
-// 3️⃣ ishga chiqish sanasi (keyingi ish kuni)
+// ✅ 3. keyingi ish kuni (ishga chiqish)
 dt.setDate(dt.getDate() + 1);
 
 while(true){
@@ -186,6 +188,11 @@ if(workType == 6 && day !== 0) break;
 if(workType == 5 && day !== 0 && day !== 6) break;
 
 dt.setDate(dt.getDate() + 1);
+}
+
+document.getElementById("res").innerText =
+"Ishga chiqish sanasi: " + dt.toLocaleDateString("uz-UZ");
+
 }
 
 document.getElementById("res").innerText =
