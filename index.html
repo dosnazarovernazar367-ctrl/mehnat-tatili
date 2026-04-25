@@ -8,32 +8,45 @@
 <style>
 body {font-family: Arial; background:#f5f7fa; margin:0;}
 .container {max-width:600px; margin:40px auto; background:#fff; padding:20px; border-radius:10px;}
-.form-group {margin-bottom:18px;}
+.form-group {margin-bottom:20px;}
 label {font-weight:bold;}
 input, select {width:100%; padding:10px; margin-top:5px;}
-button {padding:12px; width:100%; margin-top:10px; cursor:pointer;}
+button {padding:10px; margin-top:10px; width:100%;}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-<h3>Mehnat ta’tili hisoblash</h3>
+<p><b>Mehnat ta’tili hisoblash tizimi</b></p>
 
 <div class="form-group">
-<label>Tashkilot 👇</label>
+<label>Tashkilotni tanlang 👇</label>
 <select id="org">
 <option value="">Tanlang</option>
-<option value="5">Tibbiyot birlashmasi</option>
 <option value="6">Davlat umumiy oʻrta taʼlim maktablari</option>
+<option value="5">Davlat maktabgacha taʼlim tashkilotlari</option>
+<option value="5">Maktabgacha va maktab ta’lim bo‘limi</option>
+<option value="5">Madaniyat bo‘limi</option>
+<option value="5">Tibbiyot birlashmasi</option>
+<option value="5">Sanitariya-epidemiologik bo‘lim</option>
 <option value="6">Davlat o‘rmon xo‘jaligi</option>
+<option value="5">Pensiya jamg‘armasi</option>
+<option value="6">Obodonlashtirish boshqarmasi</option>
+<option value="5">Suv yetkazib berish</option>
+<option value="5">Veterinariya</option>
+<option value="5">Oila va xotin-qizlar</option>
+<option value="5">Bandlik markazi</option>
 <option value="5">Soliq inspeksiyasi</option>
+<option value="5">Qishloq xo‘jaligi</option>
+<option value="5">Turizm</option>
+<option value="5">Yoshlar agentligi</option>
+<option value="5">Poliklinikalar</option>
 </select>
 </div>
 
 <div class="form-group">
-<label>Hudud 👇</label>
+<label>Hududni tanlang 👇</label>
 <select id="region" onchange="loadDistricts()">
 <option value="">Tanlang</option>
 <option value="qq">Qoraqalpogʻiston</option>
@@ -46,14 +59,12 @@ button {padding:12px; width:100%; margin-top:10px; cursor:pointer;}
 </div>
 
 <div class="form-group">
-<label>Tuman / shahar 👇</label>
-<select id="district">
-<option value="">Tanlang</option>
-</select>
+<label>Tuman(shahar)ni tanlang 👇</label>
+<select id="district"></select>
 </div>
 
 <div class="form-group">
-<label>Ta’til kunlari</label>
+<label>Ta’til miqdorini kiriting</label>
 <input type="number" id="days">
 </div>
 
@@ -70,62 +81,57 @@ button {padding:12px; width:100%; margin-top:10px; cursor:pointer;}
 
 <script>
 
-// BONUS
+// BONUS KUNLAR
 const bonus = {
-"Moʻynoq tumani":3,
-"Qoʻngʻirot tumani":3,
-"Boʻzatov tumani":3,
-"Qoraoʻzak tumani":2,
-"Nukus tumani":2,
-"Taxiatosh tumani":1,
-"Uchquduk shahri":6,
-"Zarafshon shahri":6,
-"Tomdi tumani":5,
-"Qiziltepa tumani":3,
-"Karmana tumani":2,
-"Navoiy shahri":2,
-"Muborak tumani":2
+"Moʻynoq tumani":3,"Moʻynoq shahri":3,"Qoʻngʻirot tumani":3,"Boʻzatov tumani":3,
+"Qoraoʻzak tumani":2,"Kegeyli tumani":2,"Qonlikoʻl tumani":2,"Nukus tumani":2,
+"Taxtakoʻpir tumani":2,"Chimboy tumani":2,"Shumanoy tumani":2,"Qoʻngʻirot shahri":2,
+"Taxiatosh tumani":1,"Xoʻjayli tumani":1,"Amudaryo tumani":1,"Beruniy tumani":1,
+"Toʻrtkoʻl tumani":1,"Ellikqal’a tumani":1,"Nukus shahri":1,
+"Uchquduk shahri":6,"Zarafshon shahri":6,"Tomdi tumani":5,"Uchquduq tumani":5,
+"Konimex tumani":3,"Qiziltepa tumani":3,"Navbahor tumani":3,"Nurota tumani":3,
+"Xatirchi tumani":3,"Karmana tumani":2,"Navoiy shahri":2,
+"Qorovulbozor tumani":5,"Gazli shahri":2,"Olot tumani":2,"Qorakoʻl tumani":2,
+"Pop tumani":2,"Muborak tumani":2
 };
 
-// DISTRICTS
+// TUMANLAR
 const districts = {
-qq:["Moʻynoq tumani","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani","Nukus tumani","Taxiatosh tumani","Boshqa"],
-navoiy:["Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Qiziltepa tumani","Karmana tumani","Navoiy shahri","Boshqa"],
-buxoro:["Qorovulbozor tumani","Olot tumani","Qorakoʻl tumani","Boshqa"],
+qq:["Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani","Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri","Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani","Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"],
+navoiy:["Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani","Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani","Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"],
+buxoro:["Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"],
 namangan:["Pop tumani","Boshqa"],
 qashqa:["Muborak tumani","Boshqa"]
 };
 
-// LOAD DISTRICTS
 function loadDistricts(){
-
-let r = document.getElementById("region").value;
-let d = document.getElementById("district");
-
-d.innerHTML = "";
-
-if(!r){
-d.disabled = true;
+let region=document.getElementById("region").value;
+let d=document.getElementById("district");
+d.innerHTML="";
+if(region==="boshqa"){
+d.disabled=true;
 return;
 }
 
-d.disabled = false;
+d.disabled=false;
 
-let first = document.createElement("option");
-first.text = "Tanlang";
-first.disabled = true;
-first.selected = true;
-d.appendChild(first);
-
-districts[r].forEach(x=>{
-let o = document.createElement("option");
-o.value = x;
-o.textContent = x;
-d.appendChild(o);
+districts[region].forEach(x=>{
+let o=document.createElement("option");
+o.text=x;
+d.add(o);
 });
 }
 
-// CALC
+// ISH KUNI CHECK
+function isWorkDay(date,workType){
+let day=date.getDay();
+if(workType==6){
+return day!==0;
+}else{
+return day!==0 && day!==6;
+}
+}
+
 function calc(){
 
 let days = parseInt(document.getElementById("days").value);
@@ -133,39 +139,46 @@ let start = new Date(document.getElementById("date").value);
 let workType = parseInt(document.getElementById("org").value);
 let district = document.getElementById("district").value;
 
-if(!days || !start){
-alert("Ma’lumot kiriting");
-return;
-}
-
+// bonus kun
 let b = bonus[district] || 0;
+
+// oddiy kun
 let normal = days - b;
 
 let dt = new Date(start);
 
-// oddiy kun
-for(let i=0;i<normal;i++){
-dt.setDate(dt.getDate()+1);
+// ✅ 1. oddiy kunlar (kalendar)
+for(let i=0; i<normal; i++){
+dt.setDate(dt.getDate() + 1);
 }
 
-// bonus kun
+// ✅ 2. imtiyozli kunlar (TO‘G‘RI)
 let added = 0;
+
 while(added < b){
 
-dt.setDate(dt.getDate()+1);
+dt.setDate(dt.getDate() + 1);
 
 let day = dt.getDay();
 
+// 6 kunlik → yakshanba skip
 if(workType == 6){
-if(day !== 0) added++;
-}else{
-if(day !== 0 && day !== 6) added++;
+if(day !== 0){
+added++;
+}
+}
+
+// 5 kunlik → shanba + yakshanba skip
+if(workType == 5){
+if(day !== 0 && day !== 6){
+added++;
+}
 }
 
 }
 
-// ishga chiqish
-dt.setDate(dt.getDate()+1);
+// ✅ 3. keyingi ish kuni (ishga chiqish)
+dt.setDate(dt.getDate() + 1);
 
 while(true){
 
@@ -174,19 +187,14 @@ let day = dt.getDay();
 if(workType == 6 && day !== 0) break;
 if(workType == 5 && day !== 0 && day !== 6) break;
 
-dt.setDate(dt.getDate()+1);
+dt.setDate(dt.getDate() + 1);
 }
 
-// format
-let m = ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"];
-
-let result = ${dt.getFullYear()}-yil ${dt.getDate()}-${m[dt.getMonth()]};
-  document.getElementById("res").innerText =
-"Ishga chiqish sanasi: " + result;
+document.getElementById("res").innerText =
+"Ishga chiqish sanasi: " + dt.toLocaleDateString("uz-UZ");
 
 }
 
 </script>
-
 </body>
 </html>
