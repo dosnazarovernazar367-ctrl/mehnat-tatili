@@ -97,29 +97,64 @@ const bonus = {
 
 // TUMANLAR
 const districts = {
-qq:["Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani","Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri","Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani","Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"],
-navoiy:["Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani","Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani","Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"],
-buxoro:["Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"],
-namangan:["Pop tumani","Boshqa"],
-qashqa:["Muborak tumani","Boshqa"]
+qq:[
+"Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
+"Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani",
+"Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri",
+"Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani",
+"Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"
+],
+navoiy:[
+"Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani",
+"Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani",
+"Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"
+],
+buxoro:[
+"Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"
+],
+namangan:[
+"Pop tumani","Boshqa"
+],
+qashqa:[
+"Muborak tumani","Boshqa"
+]
 };
-
 function loadDistricts(){
-let region=document.getElementById("region").value;
-let d=document.getElementById("district");
-d.innerHTML="";
-  if(region==="boshqa"){
-d.disabled=true;
+
+let region = document.getElementById("region").value;
+let d = document.getElementById("district");
+
+d.innerHTML = "";
+
+// agar hudud tanlanmagan bo‘lsa
+if(!region){
+d.disabled = true;
 return;
 }
 
-d.disabled=false;
+// boshqa tanlansa
+if(region === "boshqa"){
+d.disabled = true;
+return;
+}
 
-districts[region].forEach(x=>{
-let o=document.createElement("option");
-o.text=x;
-d.add(o);
+d.disabled = false;
+
+// default option
+let first = document.createElement("option");
+first.textContent = "Tanlang";
+first.disabled = true;
+first.selected = true;
+d.appendChild(first);
+
+// tumanlarni yuklash
+districts[region].forEach(item=>{
+let opt = document.createElement("option");
+opt.value = item;
+opt.textContent = item;
+d.appendChild(opt);
 });
+
 }
 
 // ISH KUNI CHECK
