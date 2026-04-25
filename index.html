@@ -6,7 +6,11 @@
 <title>Mehnat Ta'tili Hisoblash</title>
 
 <style>
-body {font-family: Arial; background:#f5f7fa; margin:0;}
+body {
+font-family: Arial;
+background:#f5f7fa;
+margin:0;
+}
 
 .container {
 max-width:600px;
@@ -19,18 +23,6 @@ border-radius:10px;
 .center {text-align:center;}
 .hidden {display:none;}
 
-button {
-padding:10px 20px;
-margin:10px;
-cursor:pointer;
-}
-
-input, select {
-width:100%;
-padding:10px;
-margin-top:6px;
-}
-
 .form-group {
 margin-bottom:20px;
 }
@@ -41,35 +33,33 @@ font-weight:bold;
 margin-bottom:6px;
 }
 
+input, select {
+width:100%;
+padding:10px;
+margin-top:6px;
+box-sizing:border-box;
+}
+
+button {
+padding:10px 20px;
+margin-top:10px;
+cursor:pointer;
+}
+
 small {color:gray;}
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-<div id="splash" class="container center">
-  <h2>LOGO</h2>
-  <p>Qanlıkól rayonı ádillik bolimi bas máslahatshisi<br>
-  Yusupov Ernazar tárepinen islep shıǵıldı</p>
-</div>
+<div class="container">
 
-<!-- LANGUAGE -->
-<div id="language" class="container center hidden">
-  <h3>Tilni tanlang</h3>
-  <button onclick="startUz()">Oʻzbek tili</button>
-  <button>Qaraqalpaq tili</button>
-</div>
+<p><b>Mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash tizimi</b></p>
 
-<!-- MAIN -->
-<div id="main" class="container hidden">
-
-<p><b>Bu sayt mehnat ta’tilidan keyin ishga chiqish sanasini hisoblash uchun.</b></p>
-
-<!-- ORGANIZATION -->
+<!-- TASHKILOT -->
 <div class="form-group">
 <label>Tashkilotni tanlang 👇</label>
-<input list="orgs" placeholder="-- Tanlang --">
+<input list="orgs" placeholder="Tanlang">
 
 <datalist id="orgs">
 <option value="Davlat umumiy oʻrta taʼlim maktablari">
@@ -87,7 +77,7 @@ small {color:gray;}
 <div class="form-group">
 <label>Hududni tanlang 👇</label>
 <select id="region" onchange="loadDistricts()">
-<option value="">-- Tanlang --</option>
+<option value="">Tanlang</option>
 <option value="qq">Qoraqalpogʻiston Respublikasi</option>
 <option value="navoiy">Navoiy viloyati</option>
 <option value="buxoro">Buxoro viloyati</option>
@@ -97,22 +87,20 @@ small {color:gray;}
 </select>
 </div>
 
-<!-- DISTRICT -->
+<!-- TUMAN -->
 <div class="form-group">
-<label>Shahar(tuman)ni tanlang 👇</label>
-<select id="district">
-<option value="">-- Tanlang --</option>
-</select>
+<label>Shahar (tuman)ni tanlang 👇</label>
+<select id="district"></select>
 <small id="hint"></small>
 </div>
 
-<!-- DAYS -->
+<!-- KUN -->
 <div class="form-group">
 <label>Ta’til kunlari</label>
 <input type="number" id="days" value="30">
 </div>
 
-<!-- DATE -->
+<!-- SANA -->
 <div class="form-group">
 <label>Ta’til boshlanish sanasi</label>
 <input type="date" id="date">
@@ -121,24 +109,11 @@ small {color:gray;}
 <button onclick="calc()">Hisoblash</button>
 
 <h3 id="res"></h3>
-<p id="txt"></p>
 
 </div>
 
 <script>
 
-// SPLASH
-setTimeout(()=>{
-document.getElementById('splash').classList.add('hidden');
-document.getElementById('language').classList.remove('hidden');
-},2000);
-
-function startUz(){
-document.getElementById('language').classList.add('hidden');
-document.getElementById('main').classList.remove('hidden');
-}
-
-// DATA
 const districts = {
 qq: [
 "Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
@@ -168,15 +143,25 @@ let district = document.getElementById("district");
 let hint = document.getElementById("hint");
 
 // reset
-district.innerHTML = <option value="">-- Tanlang --</option>;
-district.disabled = false;
+district.innerHTML = "";
 hint.innerText = "";
-  // BOSHQA
+
+// BOSHQA
 if(region === "boshqa"){
 district.disabled = true;
 hint.innerText = "Bu maydonni to‘ldirish shart emas. Keyingi maydonga o‘ting.";
 return;
 }
+
+district.disabled = false;
+
+// default option
+let opt0 = document.createElement("option");
+opt0.value = "";
+opt0.textContent = "Tanlang";
+opt0.selected = true;
+opt0.disabled = true;
+district.appendChild(opt0);
 
 // fill
 if(districts[region]){
@@ -199,7 +184,7 @@ alert("Sanani tanlang");
 return;
 }
 
-if(!days){
+if(isNaN(days)){
 days = 0;
 }
 
