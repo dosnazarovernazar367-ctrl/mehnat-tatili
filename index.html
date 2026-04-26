@@ -207,66 +207,80 @@ return day !== 0 && day !== 6;
 }
 
 // ================= MAIN CALC =================
+function isWorkDay(date, workType){
+
+  if (isHoliday(date) || isExtraOff(date)) return false;
+  if (isExtraWork(date)) return true;
+
+  let day = date.getDay();
+
+  if (workType == 6) {
+    return day !== 0;
+  } else {
+    return day !== 0 && day !== 6;
+  }
+}
+
+// ================= MAIN CALC =================
 function calc(){
 
-let days = parseInt(document.getElementById("days").value);
-let start = new Date(document.getElementById("date").value);
-let workType = parseInt(document.getElementById("org").value);
-let district = document.getElementById("district").value;
+  let days = parseInt(document.getElementById("days").value);
+  let start = new Date(document.getElementById("date").value);
+  let workType = parseInt(document.getElementById("org").value);
+  let district = document.getElementById("district").value;
 
-let b = bonus[district] || 0;
+  let b = bonus[district] || 0;
+  let normal = days - b;
 
-let normal = days - b;
-let dt = new Date(start);
+  let dt = new Date(start);
 
-// 1️⃣ oddiy kunlar
-let count = 0;
-while(count < normal){
-dt.setDate(dt.getDate()+1);
-if(!isHoliday(dt)){
-count++;
-}
-}
+  // 1️⃣ oddiy kunlar (bayram + dam olish SKIP bilan)
+  let count = 0;
+  while (count < normal) {
+    dt.setDate(dt.getDate() + 1);
 
-// 2️⃣ imtiyozli kunlar
-let added = 0;
-while(added < b){
-dt.setDate(dt.getDate()+1);
-if(isWorkDay(dt, workType)){
-added++;
-}
-}
+    if (isHoliday(dt)) continue;
+    if (isExtraOff(dt)) continue;
 
-// 3️⃣ ishga chiqish sanasi
-while (true) {
-  dt.setDate(dt.getDate() + 1);
+    count++;
+  }
 
-  // 1. bayram bo‘lsa o't
-  if (isHoliday(dt)) continue;
+  // 2️⃣ imtiyozli kunlar (faqat real ish kunlarida sanaladi)
+  let added = 0;
+  while (added < b) {
+    dt.setDate(dt.getDate() + 1);
 
-  // 2. qo‘shimcha dam bo‘lsa o't
-  if (isExtraOff(dt)) continue;
+    if (isHoliday(dt)) continue;
+    if (isExtraOff(dt)) continue;
 
-  // 3. ish kuni tekshir
-  if (!isWorkDay(dt, workType)) continue;
+    if (isWorkDay(dt, workType)) {
+      added++;
+    }
+  }
 
-  break;
-}
+  // 3️⃣ ishga chiqish sanasi (birinchi to‘liq valid ish kuni)
+  while (true) {
+    dt.setDate(dt.getDate() + 1);
 
-// 📅 FORMAT
-let months = [
-"yanvar","fevral","mart","aprel","may","iyun",
-"iyul","avgust","sentabr","oktabr","noyabr","dekabr"
-];
+    if (isHoliday(dt)) continue;
+    if (isExtraOff(dt)) continue;
+    if (!isWorkDay(dt, workType)) continue;
 
-let result =
-dt.getFullYear() + "-yil " +
-dt.getDate() + "-" +
-months[dt.getMonth()];
+    break;
+  }
 
-document.getElementById("res").innerText =
-"Ishga chiqish sanasi: " + result;
+  let months = [
+    "yanvar","fevral","mart","aprel","may","iyun",
+    "iyul","avgust","sentabr","oktabr","noyabr","dekabr"
+  ];
 
+  let result =
+    dt.getFullYear() + "-yil " +
+    dt.getDate() + "-" +
+    months[dt.getMonth()];
+
+  document.getElementById("res").innerText =
+    "Ishga chiqish sanasi: " + result;
 }
 
 </script>
