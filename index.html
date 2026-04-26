@@ -222,48 +222,54 @@ function isWorkDay(date, workType){
 }
 
 // ================= MAIN CALC =================
-function calc(){
-
+function calc() {
   let days = parseInt(document.getElementById("days").value);
   let start = new Date(document.getElementById("date").value);
   let workType = parseInt(document.getElementById("org").value);
   let district = document.getElementById("district").value;
 
   let b = bonus[district] || 0;
-  let normal = days - b;
 
   let dt = new Date(start);
 
-  // 1️⃣ oddiy kunlar (bayram + dam olish SKIP bilan)
-  let count = 0;
-  while (count < normal) {
-    dt.setDate(dt.getDate() + 1);
+  // nechta "hisoblanadigan kun" kerak
+  let remaining = days;
 
-    if (isHoliday(dt)) continue;
-    if (isExtraOff(dt)) continue;
-
-    count++;
+  function isValidDay(d) {
+    if (isHoliday(d)) return false;
+    if (isExtraOff(d)) return false;
+    return true;
   }
 
-  // 2️⃣ imtiyozli kunlar (faqat real ish kunlarida sanaladi)
+  // ================= TA'TIL KUNLARI =================
+  while (remaining > 0) {
+    dt.setDate(dt.getDate() + 1);
+
+    if (!isValidDay(dt)) continue;
+
+    // bonus kun ham faqat valid kunda kamayadi
+    remaining--;
+  }
+
+  // ================= BONUS (IMTIYOZLI KUNLAR) =================
   let added = 0;
+
   while (added < b) {
     dt.setDate(dt.getDate() + 1);
 
-    if (isHoliday(dt)) continue;
-    if (isExtraOff(dt)) continue;
+    if (!isValidDay(dt)) continue;
 
     if (isWorkDay(dt, workType)) {
       added++;
     }
   }
 
-  // 3️⃣ ishga chiqish sanasi (birinchi to‘liq valid ish kuni)
+  // ================= ISHGA CHIQISH KUNI =================
   while (true) {
     dt.setDate(dt.getDate() + 1);
 
-    if (isHoliday(dt)) continue;
-    if (isExtraOff(dt)) continue;
+    if (!isValidDay(dt)) continue;
+
     if (!isWorkDay(dt, workType)) continue;
 
     break;
@@ -282,7 +288,6 @@ function calc(){
   document.getElementById("res").innerText =
     "Ishga chiqish sanasi: " + result;
 }
-
 </script>
 
 </body>
