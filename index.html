@@ -2,56 +2,34 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Mehnat ta'tili kalkulyatori</title>
+<title>Mehnat ta’tili kalkulyatori</title>
 
 <style>
-body {
-    font-family: Arial;
-    background: #f4f6f9;
-    text-align: center;
-}
-
-.container {
-    width: 80%;
-    margin: auto;
-}
-
-.card {
-    background: white;
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 10px;
-}
-
-.hidden { display: none; }
-
-button {
-    padding: 10px 20px;
-    margin: 10px;
-}
+body {font-family: Arial; background:#f4f6f9; text-align:center;}
+.card {background:#fff;padding:20px;margin:20px auto;width:80%;border-radius:10px;}
+.hidden{display:none;}
+input,select{padding:8px;margin:5px;}
+button{padding:10px 20px;margin-top:10px;}
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- Splash -->
-<div id="splash" class="container">
-    <h2>Qanlıkól rayonı ádillik bolimi</h2>
-    <p>bas máslahatshisi Yusupov Ernazar tárepinen islep shıǵıldı</p>
+<div id="splash">
+<h2>Qanlıkól rayonı ádillik bolimi</h2>
+<p>bas máslahatshisi Yusupov Ernazar tárepinen islep shıǵıldı</p>
 </div>
 
-<!-- Main -->
-<div id="main" class="hidden container">
+<div id="main" class="hidden">
 
 <div class="card">
-<h3>Tilni tanlang</h3>
-<button onclick="start()">Oʻzbek tili</button>
+<button onclick="start()">O‘zbek tili</button>
 <button>Qaraqalpaq tili</button>
 </div>
 
-<div id="form" class="hidden card">
+<div id="form" class="card hidden">
 
-<p>Maskur sayt davlat tashkilotlari xodimlaring mehnat ta’tilidan qachon ishga chiqishini aniqlash uchun ishlab chiqilgan.</p>
+<p>Maskur sayt davlat tashkilotlari xodimlarining mehnat ta’tilidan qachon ishga chiqishini aniqlash uchun ishlab chiqilgan.</p>
 
 <h4>Tashkilotni tanlang 👇</h4>
 <select id="org"></select>
@@ -63,146 +41,199 @@ button {
 <select id="district"></select>
 
 <h4>Ta’til kuni 👇</h4>
-<input type="number" id="days" min="1" max="56">
+<input type="number" id="days">
 <p id="error" style="color:red;"></p>
 
 <h4>Boshlanish sanasi 👇</h4>
 <input type="date" id="start">
 
-<br><br>
+<br>
 <button onclick="calculate()">Hisoblash</button>
 
 <h3 id="result"></h3>
 
 </div>
-
 </div>
 
 <script>
 
 // splash
 setTimeout(()=>{
-    document.getElementById("splash").style.display="none";
-    document.getElementById("main").classList.remove("hidden");
+document.getElementById("splash").style.display="none";
+document.getElementById("main").classList.remove("hidden");
 },2000)
 
-// start
 function start(){
-    document.getElementById("form").classList.remove("hidden");
+document.getElementById("form").classList.remove("hidden");
 }
 
 // tashkilotlar
 const orgs = [
-"maktab","obodon","ormon","suv","boshqa"
+"maktab","obodon","ormon","suv",
+"tibbiyot","soliq","bandlik","boshqa"
 ];
 
-const orgSelect = document.getElementById("org");
 orgs.forEach(o=>{
-    let opt=document.createElement("option");
-    opt.value=o;
-    opt.text=o;
-    orgSelect.add(opt);
+let opt=document.createElement("option");
+opt.value=o; opt.text=o;
+document.getElementById("org").add(opt);
 });
 
-// region
-const regions = ["Qoraqalpogʻiston","Navoiy","Buxoro","Namangan","Qashqadaryo","Boshqa"];
+// hudud
+const regions = [
+"Qoraqalpogʻiston","Navoiy","Buxoro","Namangan","Qashqadaryo","Boshqa"
+];
 
-const regionSelect = document.getElementById("region");
 regions.forEach(r=>{
-    let opt=document.createElement("option");
-    opt.value=r;
-    opt.text=r;
-    regionSelect.add(opt);
+let opt=document.createElement("option");
+opt.value=r; opt.text=r;
+document.getElementById("region").add(opt);
 });
 
-// district data (qisqartirilgan demo)
-const districtsData = {
+// barcha tumanlar
+const districts = {
 "Qoraqalpogʻiston":[
-"Qonlikoʻl","Nukus","Boshqa"
+"Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani",
+"Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani","Taxtakoʻpir tumani","Chimboy tumani",
+"Shumanoy tumani","Qoʻngʻirot shahri","Taxiatosh tumani","Xoʻjayli tumani",
+"Amudaryo tumani","Beruniy tumani","Toʻrtkoʻl tumani","Ellikqaʼla tumani","Nukus shahri","Boshqa"
 ],
 "Navoiy":[
-"Zarafshon","Boshqa"
+"Uchquduq shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani",
+"Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani",
+"Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"
+],
+"Buxoro":[
+"Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"
+],
+"Namangan":[
+"Pop tumani Chorkesar","Boshqa"
+],
+"Qashqadaryo":[
+"Muborak tumani","Boshqa"
 ]
 };
 
 function loadDistricts(){
-    let r = regionSelect.value;
-    let dSelect = document.getElementById("district");
-    dSelect.innerHTML="";
+let r=document.getElementById("region").value;
+let d=document.getElementById("district");
+d.innerHTML="";
 
-    if(r==="Boshqa"){
-        dSelect.innerHTML="<option>Boshqa</option>";
-        return;
-    }
-
-    districtsData[r].forEach(d=>{
-        let opt=document.createElement("option");
-        opt.value=d;
-        opt.text=d;
-        dSelect.add(opt);
-    });
+if(r==="Boshqa"){
+d.innerHTML="<option>Boshqa</option>";
+return;
 }
 
-// helper
-function isWeekend(date, type){
-    let day = date.getDay();
-
-    if(type==="5") return (day===0 || day===6);
-    if(type==="6") return (day===0);
-
-    return false;
+districts[r].forEach(x=>{
+let opt=document.createElement("option");
+opt.value=x; opt.text=x;
+d.add(opt);
+});
 }
 
-// holidays
+// imtiyozlar
+const imtiyoz = {
+"Moʻynoq tumani":3,"Moʻynoq shahri":3,"Qoʻngʻirot tumani":3,"Boʻzatov tumani":3,
+"Qoraoʻzak tumani":2,"Kegeyli tumani":2,"Qonlikoʻl tumani":2,"Nukus tumani":2,
+"Taxtakoʻpir tumani":2,"Chimboy tumani":2,"Shumanoy tumani":2,"Qoʻngʻirot shahri":2,
+"Taxiatosh tumani":1,"Xoʻjayli tumani":1,"Amudaryo tumani":1,"Beruniy tumani":1,
+"Toʻrtkoʻl tumani":1,"Ellikqaʼla tumani":1,"Nukus shahri":1,
+"Uchquduq shahri":6,"Zarafshon shahri":6,"Tomdi tumani":5,"Uchquduq tumani":5,
+"Konimex tumani":3,"Qiziltepa tumani":3,"Navbahor tumani":3,"Nurota tumani":3,
+"Xatirchi tumani":3,"Karmana tumani":2,"Navoiy shahri":2,
+"Qorovulbozor tumani":5,"Gazli shahri":2,"Olot tumani":2,"Qorakoʻl tumani":2,
+"Pop tumani Chorkesar":2,"Muborak tumani":2
+};
+
+// bayramlar
 const holidays = [
-"2026-01-01","2026-03-08","2026-03-21",
-"2026-05-09","2026-09-01","2026-10-01","2026-12-08",
+"2026-01-01","2026-03-08","2026-03-21","2026-05-09",
+"2026-09-01","2026-10-01","2026-12-08",
 "2026-03-20","2026-05-27"
 ];
 
-function isHoliday(date){
-    return holidays.includes(date.toISOString().slice(0,10));
+// qo‘shimcha dam olish
+    const extraDays = [
+"2026-01-02","2026-05-28","2026-05-29",
+"2026-08-31","2026-03-09","2026-03-23",
+"2026-05-11","2026-12-31"
+];
+
+// istisno ish kuni
+const specialWork = ["2026-12-12"];
+
+function format(d){
+return d.toLocaleDateString("uz-UZ",{day:"numeric",month:"long",year:"numeric"});
 }
 
-// main calculation
+function isWeekend(d,type){
+let day=d.getDay();
+if(type==="5") return (day===0||day===6);
+if(type==="6") return (day===0);
+}
+
+function inList(d,list){
+return list.includes(d.toISOString().slice(0,10));
+}
+
 function calculate(){
 
-let days = parseInt(document.getElementById("days").value);
-let start = new Date(document.getElementById("start").value);
-let org = document.getElementById("org").value;
+let days=parseInt(daysInput.value);
+let start=new Date(startInput.value);
+let district=districtInput.value;
+let org=orgInput.value;
 
 if(days>56){
-    document.getElementById("error").innerText="56 gacha mumkin";
-    return;
+error.innerText="56 gacha mumkin";
+return;
+}else error.innerText="";
+
+// ish turi
+let workType = ["maktab","obodon","ormon","suv"].includes(org)?"6":"5";
+
+// imtiyoz
+let imp = imtiyoz[district] || 0;
+
+// NORMAL kun
+let normal = days - imp;
+let date=new Date(start);
+let count=0;
+
+while(count < normal){
+date.setDate(date.getDate()+1);
+if(inList(date,holidays)) continue;
+count++;
 }
 
-let workType = (org==="maktab"||org==="obodon"||org==="ormon"||org==="suv")?"6":"5";
-
-let count = 0;
-let date = new Date(start);
-
-while(count < days){
-    date.setDate(date.getDate()+1);
-
-    if(isHoliday(date)) continue;
-
-    count++;
+// IMTIYOZ kun
+let impCount=0;
+while(impCount < imp){
+date.setDate(date.getDate()+1);
+if(date.getDay()===0) continue;
+impCount++;
 }
 
-// ishga chiqish sanasi
+// ishga chiqish
 while(
-    isWeekend(date, workType) ||
-    isHoliday(date)
+(isWeekend(date,workType) && !inList(date,specialWork)) ||
+inList(date,holidays) ||
+inList(date,extraDays)
 ){
-    date.setDate(date.getDate()+1);
+date.setDate(date.getDate()+1);
 }
 
-document.getElementById("result").innerText =
-"Shu sanada ishga chiqasiz: " +
-date.toLocaleDateString("uz-UZ",{day:"numeric",month:"long",year:"numeric"});
+result.innerText="Shu sanada ishga chiqishingiz kerak 👇\n"+format(date);
 
 }
+
+const daysInput=document.getElementById("days");
+const startInput=document.getElementById("start");
+const districtInput=document.getElementById("district");
+const orgInput=document.getElementById("org");
+const error=document.getElementById("error");
+const result=document.getElementById("result");
 
 </script>
+
 </body>
 </html>
