@@ -217,7 +217,7 @@ let count=0;
 
 while(count < normal){
 date.setDate(date.getDate()+1);
-if(isHoliday(date)) continue;
+if(isHoliday(date) || isExtra(date)) continue;
 count++;
 }
 
@@ -225,7 +225,7 @@ count++;
 let i=0;
 while(i<imp){
 date.setDate(date.getDate()+1);
-if(date.getDay()===0) continue;
+if(date.getDay()===0 || isExtra(date)) continue;
 i++;
 }
 
