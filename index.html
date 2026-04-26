@@ -228,49 +228,45 @@ function calc() {
   let workType = parseInt(document.getElementById("org").value);
   let district = document.getElementById("district").value;
 
-  let b = bonus[district] || 0;
+  let bonusDays = bonus[district] || 0;
 
   let dt = new Date(start);
 
-  // nechta "hisoblanadigan kun" kerak
-  let remaining = days;
+  let used = 0;       // asosiy ta’til kunlari
+  let bonusUsed = 0;  // bonus kunlar
 
-  function isValidDay(d) {
+  function isValid(d) {
     if (isHoliday(d)) return false;
     if (isExtraOff(d)) return false;
     return true;
   }
 
-  // ================= TA'TIL KUNLARI =================
-  while (remaining > 0) {
-    dt.setDate(dt.getDate() + 1);
-
-    if (!isValidDay(dt)) continue;
-
-    // bonus kun ham faqat valid kunda kamayadi
-    remaining--;
+  function isWork(d) {
+    let day = d.getDay();
+    if (workType == 6) return day !== 0;
+    return day !== 0 && day !== 6;
   }
 
-  // ================= BONUS (IMTIYOZLI KUNLAR) =================
-  let added = 0;
-
-  while (added < b) {
+  // ================= ASOSIY HISOB =================
+  while (used < days) {
     dt.setDate(dt.getDate() + 1);
 
-    if (!isValidDay(dt)) continue;
+    if (!isValid(dt)) continue;
 
-    if (isWorkDay(dt, workType)) {
-      added++;
+    used++;
+
+    // bonus faqat ish kuniga tushsa ishlaydi
+    if (bonusUsed < bonusDays && isWork(dt)) {
+      bonusUsed++;
     }
   }
 
-  // ================= ISHGA CHIQISH KUNI =================
+  // ================= ISHGA CHIQISH =================
   while (true) {
     dt.setDate(dt.getDate() + 1);
 
-    if (!isValidDay(dt)) continue;
-
-    if (!isWorkDay(dt, workType)) continue;
+    if (!isValid(dt)) continue;
+    if (!isWork(dt)) continue;
 
     break;
   }
