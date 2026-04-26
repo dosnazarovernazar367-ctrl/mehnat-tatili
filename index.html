@@ -238,9 +238,19 @@ added++;
 }
 
 // 3️⃣ ishga chiqish sanasi
-dt.setDate(dt.getDate()+1);
-while(!isWorkDay(dt, workType)){
-dt.setDate(dt.getDate()+1);
+while (true) {
+  dt.setDate(dt.getDate() + 1);
+
+  // 1. bayram bo‘lsa o't
+  if (isHoliday(dt)) continue;
+
+  // 2. qo‘shimcha dam bo‘lsa o't
+  if (isExtraOff(dt)) continue;
+
+  // 3. ish kuni tekshir
+  if (!isWorkDay(dt, workType)) continue;
+
+  break;
 }
 
 // 📅 FORMAT
