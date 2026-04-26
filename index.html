@@ -106,7 +106,6 @@ const regions=[
 ];
 
 regions.forEach(r=>region.add(new Option(r,r)));
-loadDistricts();
 // tumanlar (to‘liq)
 const districts={
 "Qoraqalpogʻiston Respublikasi":[
@@ -125,7 +124,7 @@ const districts={
 "Muborak tumani","Boshqa"
 ]
 };
-
+loadDistricts();
 function loadDistricts(){
 district.innerHTML="";
 let r=region.value;
@@ -188,7 +187,7 @@ function formatDate(date) {
     const month = months[date.getMonth()];
     const year = date.getFullYear();
 
-    return ${year}-yil ${day}-${month};
+    return `${year}-yil ${day}-${month}`;
 }
 
 function calculate(){
@@ -239,7 +238,7 @@ isExtra(date)
 date.setDate(date.getDate()+1);
 }
 
-result.innerText="Shu sanada ishga chiqishingiz kerak 👇\n"+format(date);
+result.innerText="Shu sanada ishga chiqishingiz kerak 👇\n"+formatDate(date);
 
 }
 
