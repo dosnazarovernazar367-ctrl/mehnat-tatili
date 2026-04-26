@@ -106,7 +106,7 @@ const regions=[
 ];
 
 regions.forEach(r=>region.add(new Option(r,r)));
-
+loadDistricts();
 // tumanlar (to‘liq)
 const districts={
 "Qoraqalpogʻiston Respublikasi":[
@@ -178,8 +178,17 @@ if(type==="5") return (day===0||day===6);
 if(type==="6") return (day===0);
 }
 
-function format(d){
-return d.toLocaleDateString("uz-UZ",{day:"numeric",month:"long",year:"numeric"});
+function formatDate(date) {
+    const months = [
+        "yanvar","fevral","mart","aprel","may","iyun",
+        "iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"
+    ];
+
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return ${year}-yil ${day}-${month};
 }
 
 function calculate(){
