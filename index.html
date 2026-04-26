@@ -53,9 +53,7 @@ h2{text-align:center;}
 
 <h2 id="result"></h2>
 
-<div id="debugBox" style="margin-top:20px; font-size:14px; background:#fff; padding:15px; border-radius:8px; display:none;">
-<h4>Hisoblash tafsiloti 👇</h4>
-<div id="debug"></div>
+</div>
 </div>
 
 <script>
@@ -193,7 +191,7 @@ function formatDate(date) {
 }
 
 function calculate(){
-let debug = []; //
+
 let days=+document.getElementById("days").value;
 let start=new Date(document.getElementById("start").value);
 
@@ -214,25 +212,22 @@ let imp = imt[district.value] || 0;
 
 // normal
 let normal = days - imp;
-let date = new Date(start);
-let count = 0;
+let date=new Date(start);
+let count=0;
 
 while(count < normal){
 
     date.setDate(date.getDate()+1);
 
-    if(isHoliday(date)){
-        debug.push(formatDate(date) + " → bayram (skip)");
-        continue;
-    }
-
-    if(isExtra(date)){
-        debug.push(formatDate(date) + " → qo‘shimcha dam olish (skip)");
+    // ❗ ISH KUNIGA KIRMAYDIGANLAR
+    if(
+        isHoliday(date) ||
+        isExtra(date)
+    ){
         continue;
     }
 
     count++;
-    debug.push(count + "-kun: " + formatDate(date));
 }
 
 // imtiyoz
@@ -242,41 +237,32 @@ while(i < imp){
 
     date.setDate(date.getDate()+1);
 
-    if(date.getDay() === 0){
-        debug.push(formatDate(date) + " → yakshanba (skip)");
+    // ❗ IMTIYOZ QOIDASI
+    if(
+        date.getDay() === 0 ||   // yakshanba
+        isHoliday(date) ||
+        isExtra(date)
+    ){
         continue;
     }
-
-    if(isHoliday(date)){
-        debug.push(formatDate(date) + " → bayram (skip)");
-        continue;
-    }
-
-    if(isExtra(date)){
-        debug.push(formatDate(date) + " → qo‘shimcha dam olish (skip)");
-        continue;
-    }
-
-    i++;
-    debug.push("Imtiyoz " + i + ": " + formatDate(date));
-}
 
     i++;
 }
 
 // ishga chiqish
 while(
-    (isWeekend(date, workType) && !isSpecial(date)) ||
+    (
+        isWeekend(date, workType) && 
+        !isSpecial(date)
+    ) ||
     isHoliday(date) ||
     isExtra(date)
 ){
-    debug.push(formatDate(date) + " → ishga chiqish mumkin emas (skip)");
     date.setDate(date.getDate()+1);
 }
 
 result.innerText="Shu sanada ishga chiqishingiz kerak 👇\n"+formatDate(date);
-document.getElementById("debugBox").style.display="block";
-document.getElementById("debug").innerHTML = debug.join("<br>");
+
 }
 
 </script>
