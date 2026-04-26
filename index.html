@@ -16,6 +16,7 @@ button {padding:10px; margin-top:10px; width:100%;}
 </head>
 
 <body>
+
 <div class="container">
 
 <p><b>Mehnat ta’tili hisoblash tizimi</b></p>
@@ -81,45 +82,76 @@ button {padding:10px; margin-top:10px; width:100%;}
 
 <script>
 
-// BONUS KUNLAR
+// ================= BONUS KUNLAR =================
 const bonus = {
 "Moʻynoq tumani":3,"Moʻynoq shahri":3,"Qoʻngʻirot tumani":3,"Boʻzatov tumani":3,
 "Qoraoʻzak tumani":2,"Kegeyli tumani":2,"Qonlikoʻl tumani":2,"Nukus tumani":2,
 "Taxtakoʻpir tumani":2,"Chimboy tumani":2,"Shumanoy tumani":2,"Qoʻngʻirot shahri":2,
 "Taxiatosh tumani":1,"Xoʻjayli tumani":1,"Amudaryo tumani":1,"Beruniy tumani":1,
 "Toʻrtkoʻl tumani":1,"Ellikqal’a tumani":1,"Nukus shahri":1,
-"Uchquduk shahri":6,"Zarafshon shahri":6,"Tomdi tumani":5,"Uchquduq tumani":5,
+"Uchquduk shahri":6,"Zarafshon shahri":6,
+"Tomdi tumani":5,"Uchquduq tumani":5,
 "Konimex tumani":3,"Qiziltepa tumani":3,"Navbahor tumani":3,"Nurota tumani":3,
 "Xatirchi tumani":3,"Karmana tumani":2,"Navoiy shahri":2,
 "Qorovulbozor tumani":5,"Gazli shahri":2,"Olot tumani":2,"Qorakoʻl tumani":2,
 "Pop tumani":2,"Muborak tumani":2
 };
 
-// TUMANLAR
+// ================= TUMANLAR =================
 const districts = {
-qq:["Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani","Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani","Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri","Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani","Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"],
-navoiy:["Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani","Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani","Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"],
-buxoro:["Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"],
+qq:[
+"Moʻynoq tumani","Moʻynoq shahri","Qoʻngʻirot tumani","Boʻzatov tumani",
+"Qoraoʻzak tumani","Kegeyli tumani","Qonlikoʻl tumani","Nukus tumani",
+"Taxtakoʻpir tumani","Chimboy tumani","Shumanoy tumani","Qoʻngʻirot shahri",
+"Taxiatosh tumani","Xoʻjayli tumani","Amudaryo tumani","Beruniy tumani",
+"Toʻrtkoʻl tumani","Ellikqal’a tumani","Nukus shahri","Boshqa"
+],
+navoiy:[
+"Uchquduk shahri","Zarafshon shahri","Tomdi tumani","Uchquduq tumani",
+"Konimex tumani","Qiziltepa tumani","Navbahor tumani","Nurota tumani",
+"Xatirchi tumani","Karmana tumani","Navoiy shahri","Boshqa"
+],
+buxoro:[
+"Qorovulbozor tumani","Gazli shahri","Olot tumani","Qorakoʻl tumani","Boshqa"
+],
 namangan:["Pop tumani","Boshqa"],
 qashqa:["Muborak tumani","Boshqa"]
 };
+  // ================= LOAD DISTRICTS =================
+function loadDistricts(){
+let region = document.getElementById("region").value;
+let d = document.getElementById("district");
 
-function calc(){
+d.innerHTML = "";
 
-// ===== BAYRAMLAR =====
+if(!region){
+d.disabled = true;
+return;
+}
 
-// oddiy + diniy bayramlar
+d.disabled = false;
+
+let first = document.createElement("option");
+first.textContent = "Tanlang";
+first.disabled = true;
+first.selected = true;
+d.appendChild(first);
+
+districts[region].forEach(item=>{
+let opt = document.createElement("option");
+opt.value = item;
+opt.textContent = item;
+d.appendChild(opt);
+});
+}
+
+// ================= BAYRAM =================
 function isHoliday(date){
 let d = date.getDate();
 let m = date.getMonth()+1;
 let y = date.getFullYear();
 
-// doimiy bayramlar
-let fixed = [
-"1-1","8-3","21-3","9-5","1-9","1-10","8-12"
-];
-
-// diniy
+let fixed = ["1-1","8-3","21-3","9-5","1-9","1-10","8-12"];
 let religious = {
 2025:["30-3","6-6"],
 2026:["20-3","27-5"]
@@ -131,7 +163,7 @@ if(religious[y] && religious[y].includes(d+"-"+m)) return true;
 return false;
 }
 
-// qo‘shimcha dam olish kunlari
+// ================= EXTRA OFF =================
 function isExtraOff(date){
 let d = date.getDate();
 let m = date.getMonth()+1;
@@ -145,7 +177,7 @@ let extra = {
 return extra[y] && extra[y].includes(d+"-"+m);
 }
 
-// istisno ish kunlari
+// ================= EXTRA WORK =================
 function isExtraWork(date){
 let d = date.getDate();
 let m = date.getMonth()+1;
@@ -159,11 +191,10 @@ let work = {
 return work[y] && work[y].includes(d+"-"+m);
 }
 
-// ish kuni tekshirish
+// ================= IS WORK DAY =================
 function isWorkDay(date, workType){
 
 if(isHoliday(date) || isExtraOff(date)) return false;
-
 if(isExtraWork(date)) return true;
 
 let day = date.getDay();
@@ -175,8 +206,7 @@ return day !== 0 && day !== 6;
 }
 }
 
-// ===== ASOSIY HISOB =====
-
+// ================= MAIN CALC =================
 function calc(){
 
 let days = parseInt(document.getElementById("days").value);
@@ -185,15 +215,14 @@ let workType = parseInt(document.getElementById("org").value);
 let district = document.getElementById("district").value;
 
 let b = bonus[district] || 0;
-let normal = days - b;
 
+let normal = days - b;
 let dt = new Date(start);
 
-// 1️⃣ oddiy kunlar (bayram skip)
+// 1️⃣ oddiy kunlar
 let count = 0;
 while(count < normal){
 dt.setDate(dt.getDate()+1);
-
 if(!isHoliday(dt)){
 count++;
 }
@@ -201,20 +230,15 @@ count++;
 
 // 2️⃣ imtiyozli kunlar
 let added = 0;
-
 while(added < b){
-
 dt.setDate(dt.getDate()+1);
-
 if(isWorkDay(dt, workType)){
 added++;
 }
-
 }
 
 // 3️⃣ ishga chiqish sanasi
 dt.setDate(dt.getDate()+1);
-
 while(!isWorkDay(dt, workType)){
 dt.setDate(dt.getDate()+1);
 }
@@ -235,8 +259,7 @@ document.getElementById("res").innerText =
 
 }
 
-}
-
 </script>
+
 </body>
 </html>
