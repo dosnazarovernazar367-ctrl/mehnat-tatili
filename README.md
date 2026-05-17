@@ -1,2 +1,2 @@
-# mehnat-tatili
-Mehant tatilini ber
+# mehnat-tatilini hisoblash
+Mehant tatilini hisoblash
